@@ -1,0 +1,39 @@
+# ================================================
+# SNAKE ANIMATION — GitHub Actions Workflow
+# ================================================
+# HOW TO USE:
+# 1. In your arinkumar820 repo, create this path:
+#    .github/workflows/snake.yml
+# 2. Paste this entire file there
+# 3. Go to Actions tab → run "Generate Snake" manually once
+# 4. After it runs, the snake SVG will be in the "output" branch
+# ================================================
+
+name: Generate Snake
+
+on:
+  schedule:
+    - cron: "0 0 * * *"   # Runs every day at midnight UTC
+  workflow_dispatch:        # Lets you trigger it manually too
+
+jobs:
+  generate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Generate snake SVG (light + dark)
+        uses: Platane/snk@v3
+        with:
+          github_user_name: arinkumar820
+          outputs: |
+            dist/github-contribution-grid-snake.svg
+            dist/github-contribution-grid-snake-dark.svg?palette=github-dark
+
+      - name: Push snake SVG to output branch
+        uses: crazy-max/ghaction-github-pages@v3.1.0
+        with:
+          target_branch: output
+          build_dir: dist
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
